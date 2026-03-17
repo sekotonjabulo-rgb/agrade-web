@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agrade - AI that sees your screen</title>
+  <title>agrade AI that sees your screen</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300&display=swap" rel="stylesheet" />
   <style>
@@ -467,21 +467,80 @@
       from { opacity: 0; transform: translateY(18px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+
+      .nav-actions { gap: 8px; }
+
+      .btn-ghost { padding: 8px 12px; font-size: 0.78rem; }
+
+      .btn-primary { padding: 8px 16px; font-size: 0.78rem; }
+
+      .hero { padding: 100px 20px 60px; }
+
+      .hero-title { font-size: clamp(2.6rem, 10vw, 4rem); line-height: 1.05; margin-bottom: 20px; }
+
+      .hero-subtitle { font-size: 0.88rem; margin-bottom: 36px; max-width: 100%; }
+
+      .btn-download { padding: 12px 22px; font-size: 0.84rem; }
+
+      .hero-visual { margin-top: 48px; max-width: 100%; }
+
+      .pricing { padding: 64px 20px 80px; }
+
+      .pricing-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+
+      .section-title { font-size: clamp(1.8rem, 6vw, 2.4rem); }
+
+      .pricing-grid { grid-template-columns: 1fr; max-width: 100%; }
+
+      .pricing-card { padding: 22px; }
+
+      footer { padding: 24px; }
+    }
+
+    @media (max-width: 480px) {
+      nav { padding: 16px 20px; }
+
+      .nav-actions { gap: 4px; }
+
+      .btn-ghost { padding: 7px 10px; font-size: 0.75rem; }
+
+      .btn-primary { padding: 7px 14px; font-size: 0.75rem; }
+
+      .hero { padding: 90px 16px 52px; }
+
+      .hero-title { font-size: clamp(2.2rem, 11vw, 3rem); }
+
+      .hero-subtitle { font-size: 0.84rem; }
+
+      .btn-download { width: 100%; justify-content: center; }
+
+      .mock-app { border-radius: 16px; }
+
+      .pricing { padding: 52px 16px 64px; }
+
+      .pricing-card { padding: 20px; }
+
+      footer { padding: 20px 16px; }
+    }
   </style>
 </head>
 <body>
 
   <nav id="nav">
-    <a href="#" class="nav-logo">Agrade</a>
+    <a href="#" class="nav-logo">agrade</a>
     <div class="nav-actions">
+      <a href="login.html" class="btn-ghost">Log in</a>
       <a href="#pricing" class="btn-ghost">Pricing</a>
       <a href="https://github.com/sekotonjabulo-rgb/agrade/releases/latest/download/agrade_0.1.0_x64-setup.exe" class="btn-primary">Download</a>
     </div>
   </nav>
 
   <section class="hero">
-    <h1 class="hero-title"><em>Undetectable</em> ai that<br>sees your screen</h1>
-    <p class="hero-subtitle">Agrade sits invisibly over your screen, reads what's in front of you, and gives you the answer in real time, without anyone knowing.</p>
+    <h1 class="hero-title"><em>undetectable</em> ai that<br>sees your screen</h1>
+    <p class="hero-subtitle">agrade sits invisibly over your screen, reads what's in front of you, and gives you the answer in real time, without anyone knowing.</p>
     <div class="hero-actions">
       <a href="https://github.com/sekotonjabulo-rgb/agrade/releases/latest/download/agrade_0.1.0_x64-setup.exe" class="btn-download">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -602,4 +661,4 @@
     });
   </script>
 </body>
-</html>
+</html>q  
