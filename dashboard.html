@@ -220,6 +220,22 @@
       from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    @media (max-width: 768px) {
+      .page { padding: 60px 24px 60px; }
+      .page-header { flex-direction: column; gap: 16px; margin-bottom: 40px; }
+      .header-meta { text-align: left; }
+      .btn-signout { margin-left: 0; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .dash-card-full { grid-column: 1; }
+    }
+
+    @media (max-width: 480px) {
+      .page { padding: 48px 16px 48px; }
+      .page-greeting { font-size: 1.8rem; }
+      .dash-card { padding: 20px; }
+      .account-row { flex-direction: column; align-items: flex-start; }
+    }
   </style>
 </head>
 <body>
