@@ -18,7 +18,7 @@
       --error: rgba(255, 100, 100, 0.85);
     }
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; width: 100%; }
 
     body {
       background: var(--black);
@@ -28,6 +28,7 @@
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
+      width: 100%;
     }
 
     body::before {
@@ -106,6 +107,30 @@
       margin-bottom: 36px;
     }
 
+    .app-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(110, 231, 183, 0.08);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 0.68rem;
+      font-family: 'DM Mono', monospace;
+      color: #6ee7b7;
+      margin-bottom: 32px;
+    }
+
+    .app-badge-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #6ee7b7;
+      box-shadow: 0 0 6px rgba(110,231,183,0.5);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
     .form-group {
       display: flex;
       flex-direction: column;
@@ -179,6 +204,42 @@
       min-height: 1em;
     }
 
+    .success-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 16px;
+      padding: 40px 0;
+    }
+
+    .success-screen.visible { display: flex; }
+
+    .success-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(110, 231, 183, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+
+    .success-subtitle {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
     .auth-switch {
       margin-top: 24px;
       text-align: center;
@@ -202,6 +263,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .footer-logo {
@@ -211,10 +274,7 @@
       text-decoration: none;
     }
 
-    .footer-links {
-      display: flex;
-      gap: 28px;
-    }
+    .footer-links { display: flex; gap: 28px; }
 
     .footer-link {
       font-size: 0.65rem;
@@ -255,24 +315,42 @@
 
   <main class="page">
     <div class="auth-wrap">
-      <p class="auth-title">Welcome back</p>
-      <p class="auth-subtitle">Sign in to your agrade account</p>
 
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input type="email" class="form-input" id="emailInput" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input type="password" class="form-input" id="passwordInput" />
-      </div>
-      <div class="form-footer">
-        <a href="#" class="form-link">Forgot password?</a>
-      </div>
-      <button class="btn-submit" id="submitBtn">Log in</button>
-      <p class="error-msg" id="errorMsg"></p>
+      <div id="loginForm">
+        <p class="auth-title">Welcome back</p>
+        <p class="auth-subtitle">Sign in to continue to agrade</p>
 
-      <p class="auth-switch">Don't have an account? <a href="signup.html">Sign up</a></p>
+        <div id="appBadge" class="app-badge" style="display:none">
+          <div class="app-badge-dot"></div>
+          Signing in from agrade app
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" id="emailInput" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-input" id="passwordInput" />
+        </div>
+        <div class="form-footer">
+          <a href="#" class="form-link">Forgot password?</a>
+        </div>
+        <button class="btn-submit" id="submitBtn">Log in</button>
+        <p class="error-msg" id="errorMsg"></p>
+        <p class="auth-switch">Don't have an account? <a href="signup.html">Sign up</a></p>
+      </div>
+
+      <div class="success-screen" id="successScreen">
+        <div class="success-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <p class="success-title">You're in</p>
+        <p class="success-subtitle">You can close this tab and return to the agrade app. It should open automatically.</p>
+      </div>
+
     </div>
   </main>
 
@@ -288,6 +366,13 @@
     window.addEventListener('scroll', () => {
       document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
     });
+
+    // detect if opened from app via ?source=app query param
+    const params = new URLSearchParams(window.location.search);
+    const fromApp = params.get('source') === 'app';
+    if (fromApp) {
+      document.getElementById('appBadge').style.display = 'inline-flex';
+    }
 
     document.getElementById('submitBtn').addEventListener('click', async () => {
       const email = document.getElementById('emailInput').value.trim();
@@ -314,7 +399,23 @@
         return;
       }
 
-      window.location.href = 'dashboard.html';
+      const accessToken = data.session.access_token;
+      const refreshToken = data.session.refresh_token;
+
+      if (fromApp) {
+        // redirect back into the desktop app via deep link
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('successScreen').classList.add('visible');
+        setTimeout(() => {
+          window.location.href = `agrade://auth?token=${encodeURIComponent(accessToken)}&refresh=${encodeURIComponent(refreshToken)}`;
+        }, 800);
+      } else {
+        window.location.href = 'dashboard.html';
+      }
+    });
+
+    document.getElementById('passwordInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('submitBtn').click();
     });
   </script>
 </body>
