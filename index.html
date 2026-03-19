@@ -538,12 +538,17 @@
     });
 
     async function buildCheckoutUrl(baseUrl) {
+      const params = new URLSearchParams(window.location.search);
+      const urlUserId = params.get("user_id");
+      if (urlUserId) {
+        return `${baseUrl}?checkout[custom][user_id]=${urlUserId}`;
+      }
       const { data } = await supabaseClient.auth.getSession();
       const userId = data?.session?.user?.id;
       if (userId) {
         return `${baseUrl}?checkout[custom][user_id]=${userId}`;
       }
-      return `${baseUrl}?checkout[redirect_url]=${encodeURIComponent(window.location.href)}`;
+      return baseUrl;
     }
 
     document.getElementById('btnWeekly').addEventListener('click', async (e) => {
@@ -557,6 +562,12 @@
       const url = await buildCheckoutUrl(MONTHLY_URL);
       window.location.href = url;
     });
+
+    if (window.location.hash === '#pricing') {
+      setTimeout(() => {
+        document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
   </script>
 </body>
 </html>
