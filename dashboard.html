@@ -62,10 +62,7 @@
       margin-bottom: 8px;
     }
 
-    .page-greeting em {
-      font-style: italic;
-      color: var(--muted);
-    }
+    .page-greeting em { font-style: italic; color: var(--muted); }
 
     .page-subtitle {
       font-size: 0.88rem;
@@ -258,14 +255,14 @@
       <div class="dash-card">
         <p class="dash-card-label">Subscription</p>
         <div>
-          <p class="dash-card-title">No active plan</p>
-          <p class="dash-card-meta">Choose a plan to unlock full access to the agrade overlay.</p>
+          <p class="dash-card-title" id="planTitle">Free Plan</p>
+          <p class="dash-card-meta" id="planMeta">Loading...</p>
         </div>
         <div class="status-pill">
           <div class="status-dot" id="statusDot"></div>
-          <span id="statusText">Inactive</span>
+          <span id="statusText">Loading</span>
         </div>
-        <a href="index.html#pricing" class="btn-manage">View plans</a>
+        <a href="pricing.html" class="btn-manage" id="planBtn">View plans</a>
       </div>
 
       <div class="dash-card">
@@ -274,7 +271,8 @@
           <p class="dash-card-title">agrade for Windows</p>
           <p class="dash-card-meta">Version 0.1.0 · Windows 10 / 11 · 64-bit</p>
         </div>
-<a href="https://github.com/Lethabo3/agrade/releases/latest/download/agrade.exe" class="btn-download">Download</a>      </div>
+        <a href="https://github.com/Lethabo3/agrade/releases/latest/download/agrade.exe" class="btn-download">Download</a>
+      </div>
 
       <div class="dash-card dash-card-full">
         <p class="dash-card-label">Account</p>
@@ -322,6 +320,37 @@
       document.getElementById('greetingName').textContent = firstName + '.';
       document.getElementById('accountEmail').textContent = email;
       document.getElementById('memberSince').textContent = createdAt;
+
+      try {
+        const res = await fetch('https://agrade-cbwf.onrender.com/subscription', {
+          headers: { 'Authorization': `Bearer ${session.access_token}` }
+        });
+        const sub = await res.json();
+
+        const planTitle = document.getElementById('planTitle');
+        const planMeta = document.getElementById('planMeta');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const planBtn = document.getElementById('planBtn');
+
+        if (sub.plan !== 'free' && sub.status === 'active') {
+          planTitle.textContent = sub.plan.charAt(0).toUpperCase() + sub.plan.slice(1) + ' Plan';
+          planMeta.textContent = 'Unlimited messages — full access enabled.';
+          statusDot.classList.add('active');
+          statusText.textContent = 'Active';
+          planBtn.textContent = 'Manage subscription';
+          planBtn.href = 'https://app.lemonsqueezy.com/my-orders';
+        } else {
+          planTitle.textContent = 'Free Plan';
+          planMeta.textContent = `${sub.remaining} of 5 messages remaining.`;
+          statusText.textContent = 'Free';
+          planBtn.textContent = 'Upgrade to Pro';
+          planBtn.href = 'pricing.html';
+        }
+      } catch (e) {
+        document.getElementById('planMeta').textContent = 'Could not load subscription status.';
+        document.getElementById('statusText').textContent = 'Unknown';
+      }
     })();
   </script>
 </body>
