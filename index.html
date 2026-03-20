@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>agrade AI that sees your screen</title>
+  <title>Agrade AI that sees your screen</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -122,26 +122,6 @@
       pointer-events: none;
     }
 
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 6px 16px;
-      font-size: 0.68rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 40px;
-      font-family: 'DM Mono', monospace;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 0.1s forwards;
-    }
-
-    .hero-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--white); opacity: 0.5; }
-
     .hero-title {
       font-family: 'Instrument Serif', serif;
       font-size: clamp(3.5rem, 8vw, 7rem);
@@ -208,7 +188,6 @@
     .mock-app {
       background: rgba(6, 8, 14, 0.9);
       border-radius: 22px;
-      border: none;
       overflow: hidden;
       box-shadow: 0 40px 80px rgba(0,0,0,0.7);
       text-align: left;
@@ -271,21 +250,8 @@
       box-sizing: border-box;
     }
 
-    .pricing-header {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 860px;
-      margin-bottom: 52px;
-    }
-
-    .pricing-header-text { text-align: left; }
-
     .section-label { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 14px; font-family: 'DM Mono', monospace; }
-
     .section-title { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -0.02em; margin-bottom: 6px; color: var(--white); }
-
     .section-subtitle { font-size: 0.88rem; color: var(--muted); font-weight: 300; margin-bottom: 52px; }
 
     .pricing-grid {
@@ -300,7 +266,6 @@
 
     .pricing-card {
       background: var(--surface);
-      border: none;
       border-radius: 18px;
       padding: 28px;
       display: flex;
@@ -313,7 +278,6 @@
     .pricing-amount { font-size: 2.4rem; font-weight: 300; letter-spacing: -0.03em; color: var(--white); }
     .pricing-period { font-size: 0.76rem; color: var(--muted); }
     .pricing-savings { font-size: 0.66rem; font-family: 'DM Mono', monospace; color: var(--muted); margin-top: 4px; min-height: 1em; }
-    .pricing-divider { display: none; }
 
     .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 9px; flex: 1; }
 
@@ -375,7 +339,6 @@
       .btn-download { padding: 12px 22px; font-size: 0.84rem; }
       .hero-visual { margin-top: 48px; max-width: 100%; }
       .pricing { padding: 64px 20px 80px; }
-      .pricing-header { flex-direction: column; align-items: flex-start; gap: 20px; }
       .section-title { font-size: clamp(1.8rem, 6vw, 2.4rem); }
       .pricing-grid { grid-template-columns: 1fr; max-width: 100%; }
       .pricing-card { padding: 22px; }
@@ -384,7 +347,6 @@
 
     @media (max-width: 480px) {
       nav { padding: 16px 20px; }
-      .nav-actions { gap: 4px; }
       .btn-ghost { padding: 7px 10px; font-size: 0.75rem; }
       .btn-primary { padding: 7px 14px; font-size: 0.75rem; }
       .hero { padding: 90px 16px 52px; }
@@ -401,18 +363,20 @@
 <body>
 
   <nav id="nav">
-    <a href="#" class="nav-logo">Agrade</a>
+    <a href="#" class="nav-logo">agrade</a>
     <div class="nav-actions">
       <a href="login.html" class="btn-ghost">Log in</a>
       <a href="#pricing" class="btn-ghost">Pricing</a>
-<a href="https://github.com/Lethabo3/agrade/releases/latest/download/agrade.exe" class="btn-primary">Download</a>    </div>
+      <a href="https://github.com/Lethabo3/agrade/releases/latest/download/agrade.exe" class="btn-primary">Download</a>
+    </div>
   </nav>
 
   <section class="hero">
     <h1 class="hero-title"><em>Undetectable</em> ai that<br>sees your screen</h1>
     <p class="hero-subtitle">Agrade sits invisibly over your screen, reads what's in front of you, and gives you the answer in real time, without anyone knowing.</p>
     <div class="hero-actions">
-<a href="https://github.com/Lethabo3/agrade/releases/latest/download/agrade.exe" class="btn-download">        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <a href="https://github.com/Lethabo3/agrade/releases/latest/download/agrade.exe" class="btn-download">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
           <polyline points="7 10 12 15 17 10"/>
           <line x1="12" y1="15" x2="12" y2="3"/>
@@ -518,7 +482,7 @@
   </section>
 
   <footer>
-    <a href="#" class="footer-logo">Agrade</a>
+    <a href="#" class="footer-logo">agrade</a>
   </footer>
 
   <script>
@@ -535,37 +499,27 @@
       document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
     });
 
-    async function buildCheckoutUrl(baseUrl) {
-      const params = new URLSearchParams(window.location.search);
-      const urlUserId = params.get("user_id");
-      if (urlUserId) {
-        return `${baseUrl}?checkout[custom][user_id]=${urlUserId}`;
-      }
+    async function handlePlanClick(plan) {
       const { data } = await supabaseClient.auth.getSession();
       const userId = data?.session?.user?.id;
+      const baseUrl = plan === 'weekly' ? WEEKLY_URL : MONTHLY_URL;
+
       if (userId) {
-        return `${baseUrl}?checkout[custom][user_id]=${userId}`;
+        window.location.href = `${baseUrl}?checkout[custom][user_id]=${userId}`;
+      } else {
+        window.location.href = `login.html?plan=${plan}`;
       }
-      return baseUrl;
     }
 
-    document.getElementById('btnWeekly').addEventListener('click', async (e) => {
+    document.getElementById('btnWeekly').addEventListener('click', (e) => {
       e.preventDefault();
-      const url = await buildCheckoutUrl(WEEKLY_URL);
-      window.location.href = url;
+      handlePlanClick('weekly');
     });
 
-    document.getElementById('btnMonthly').addEventListener('click', async (e) => {
+    document.getElementById('btnMonthly').addEventListener('click', (e) => {
       e.preventDefault();
-      const url = await buildCheckoutUrl(MONTHLY_URL);
-      window.location.href = url;
+      handlePlanClick('monthly');
     });
-
-    if (window.location.hash === '#pricing') {
-      setTimeout(() => {
-        document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    }
   </script>
 </body>
 </html>
