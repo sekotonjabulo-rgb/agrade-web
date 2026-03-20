@@ -129,6 +129,19 @@
       animation: pulse 2s ease-in-out infinite;
     }
 
+    .plan-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(244, 243, 240, 0.06);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 0.68rem;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
     .form-group {
@@ -274,19 +287,6 @@
       text-decoration: none;
     }
 
-    .footer-links { display: flex; gap: 28px; }
-
-    .footer-link {
-      font-size: 0.65rem;
-      color: rgba(244,243,240,0.2);
-      text-decoration: none;
-      font-family: 'DM Mono', monospace;
-      letter-spacing: 0.06em;
-      transition: color 0.2s;
-    }
-
-    .footer-link:hover { color: var(--muted); }
-
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: translateY(0); }
@@ -297,12 +297,10 @@
       .page { padding: 100px 20px 80px; }
       .auth-title { font-size: 1.9rem; }
       footer { padding: 20px 24px; }
-      .footer-links { gap: 16px; }
     }
 
     @media (max-width: 480px) {
       nav { padding: 16px 20px; }
-      .nav-link { font-size: 0.75rem; }
       .page { padding: 90px 16px 60px; }
       .auth-title { font-size: 1.7rem; }
       .auth-wrap { max-width: 100%; }
@@ -312,6 +310,9 @@
 </head>
 <body>
 
+  <nav id="nav">
+    <a href="index.html" class="nav-logo">agrade</a>
+  </nav>
 
   <main class="page">
     <div class="auth-wrap">
@@ -323,6 +324,10 @@
         <div id="appBadge" class="app-badge" style="display:none">
           <div class="app-badge-dot"></div>
           Signing in from agrade app
+        </div>
+
+        <div id="planBadge" class="plan-badge" style="display:none">
+          Completing your upgrade
         </div>
 
         <div class="form-group">
@@ -348,31 +353,37 @@
           </svg>
         </div>
         <p class="success-title">You're in</p>
-        <p class="success-subtitle">You can close this tab and return to the agrade app. It should open automatically.</p>
+        <p class="success-subtitle" id="successMsg">Redirecting you now...</p>
       </div>
 
     </div>
   </main>
 
-
-
   <script>
+    const WEEKLY_URL = "https://sparksocial.lemonsqueezy.com/checkout/buy/801ef0b0-f6fd-4a28-bac2-4f67e6d7333c";
+    const MONTHLY_URL = "https://sparksocial.lemonsqueezy.com/checkout/buy/b7fb5b1f-3ebf-4654-992c-5c08e9c3eb08";
+
     const { createClient } = supabase;
     const supabaseClient = createClient(
       'https://llabvdbcvilnbukroqxn.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsYWJ2ZGJjdmlsbmJ1a3JvcXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2OTQzNzQsImV4cCI6MjA4OTI3MDM3NH0.WLdB5hNXMHJ63JGwgXgY8TEEGz7k5AVbsV7aVDy6xQU'
     );
 
-    window.addEventListener('scroll', () => {
-      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
-    });
-
-    // detect if opened from app via ?source=app query param
     const params = new URLSearchParams(window.location.search);
     const fromApp = params.get('source') === 'app';
+    const redirectPlan = params.get('plan');
+
     if (fromApp) {
       document.getElementById('appBadge').style.display = 'inline-flex';
     }
+
+    if (redirectPlan) {
+      document.getElementById('planBadge').style.display = 'inline-flex';
+    }
+
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
+    });
 
     document.getElementById('submitBtn').addEventListener('click', async () => {
       const email = document.getElementById('emailInput').value.trim();
@@ -401,16 +412,27 @@
 
       const accessToken = data.session.access_token;
       const refreshToken = data.session.refresh_token;
+      const userId = data.session.user.id;
+
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('successScreen').classList.add('visible');
 
       if (fromApp) {
-        // redirect back into the desktop app via deep link
-        document.getElementById('loginForm').style.display = 'none';
-        document.getElementById('successScreen').classList.add('visible');
+        document.getElementById('successMsg').textContent = 'You can close this tab and return to the agrade app.';
         setTimeout(() => {
           window.location.href = `agrade://auth?token=${encodeURIComponent(accessToken)}&refresh=${encodeURIComponent(refreshToken)}`;
         }, 800);
+      } else if (redirectPlan) {
+        document.getElementById('successMsg').textContent = 'Taking you to checkout...';
+        const baseUrl = redirectPlan === 'weekly' ? WEEKLY_URL : MONTHLY_URL;
+        setTimeout(() => {
+          window.location.href = `${baseUrl}?checkout[custom][user_id]=${userId}`;
+        }, 800);
       } else {
-        window.location.href = 'dashboard.html';
+        document.getElementById('successMsg').textContent = 'Redirecting you now...';
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 800);
       }
     });
 
