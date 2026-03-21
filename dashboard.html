@@ -106,8 +106,6 @@
       animation: fadeUp 0.7s ease 0.25s forwards;
     }
 
-    @media (max-width: 640px) { .dashboard-grid { grid-template-columns: 1fr; } }
-
     .dash-card {
       background: var(--surface);
       border-radius: 18px;
@@ -205,6 +203,64 @@
 
     .btn-manage:hover { background: rgba(244,243,240,0.1); color: var(--white); }
 
+    .referral-progress {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .progress-bar-wrap {
+      background: rgba(244,243,240,0.06);
+      border-radius: 100px;
+      height: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: #6ee7b7;
+      transition: width 0.6s ease;
+    }
+
+    .progress-label {
+      font-size: 0.68rem;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .referral-link-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface-hover);
+      border-radius: 12px;
+      padding: 10px 14px;
+    }
+
+    .referral-link-text {
+      flex: 1;
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .btn-copy {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-family: 'DM Mono', monospace;
+      cursor: pointer;
+      transition: color 0.2s;
+      flex-shrink: 0;
+    }
+
+    .btn-copy:hover { color: var(--white); }
+
     .account-row {
       display: flex;
       align-items: center;
@@ -236,9 +292,7 @@
   </style>
 </head>
 <body>
-
   <main class="page">
-
     <div class="page-header">
       <div>
         <p class="page-greeting">Good to see you, <em id="greetingName"></em></p>
@@ -274,6 +328,24 @@
         <a href="https://github.com/Lethabo3/agrade/releases/latest/download/agrade.exe" class="btn-download">Download</a>
       </div>
 
+      <div class="dash-card">
+        <p class="dash-card-label">Refer a friend</p>
+        <div>
+          <p class="dash-card-title">Get a free week</p>
+          <p class="dash-card-meta">Refer two friends who sign up and get a free weekly subscription unlocked automatically.</p>
+        </div>
+        <div class="referral-progress">
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="referralBar" style="width: 0%"></div>
+          </div>
+          <p class="progress-label" id="referralLabel">0 of 2 referrals</p>
+        </div>
+        <div class="referral-link-wrap">
+          <p class="referral-link-text" id="referralLink">Loading...</p>
+          <button class="btn-copy" id="copyBtn" onclick="copyReferralLink()">Copy</button>
+        </div>
+      </div>
+
       <div class="dash-card dash-card-full">
         <p class="dash-card-label">Account</p>
         <div class="account-row">
@@ -295,6 +367,8 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsYWJ2ZGJjdmlsbmJ1a3JvcXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2OTQzNzQsImV4cCI6MjA4OTI3MDM3NH0.WLdB5hNXMHJ63JGwgXgY8TEEGz7k5AVbsV7aVDy6xQU'
     );
 
+    let currentUserId = null;
+
     async function signOut() {
       await supabaseClient.auth.signOut();
       window.location.href = 'login.html';
@@ -302,6 +376,14 @@
 
     document.getElementById('signOutBtn').addEventListener('click', signOut);
     document.getElementById('signOutBtnCard').addEventListener('click', signOut);
+
+    function copyReferralLink() {
+      const link = document.getElementById('referralLink').textContent;
+      navigator.clipboard.writeText(link);
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    }
 
     (async () => {
       const { data: { session } } = await supabaseClient.auth.getSession();
@@ -312,6 +394,7 @@
       }
 
       const user = session.user;
+      currentUserId = user.id;
       const email = user.email;
       const createdAt = new Date(user.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
       const firstName = email.split('@')[0];
@@ -320,6 +403,9 @@
       document.getElementById('greetingName').textContent = firstName + '.';
       document.getElementById('accountEmail').textContent = email;
       document.getElementById('memberSince').textContent = createdAt;
+
+      const referralUrl = `https://agradee.online/signup.html?ref=${user.id}`;
+      document.getElementById('referralLink').textContent = referralUrl;
 
       try {
         const res = await fetch('https://agrade-cbwf.onrender.com/subscription', {
@@ -350,6 +436,19 @@
       } catch (e) {
         document.getElementById('planMeta').textContent = 'Could not load subscription status.';
         document.getElementById('statusText').textContent = 'Unknown';
+      }
+
+      try {
+        const refRes = await fetch('https://agrade-cbwf.onrender.com/referrals', {
+          headers: { 'Authorization': `Bearer ${session.access_token}` }
+        });
+        const refData = await refRes.json();
+        const count = refData.count || 0;
+        const pct = Math.min((count / 2) * 100, 100);
+        document.getElementById('referralBar').style.width = `${pct}%`;
+        document.getElementById('referralLabel').textContent = `${count} of 2 referrals`;
+      } catch (e) {
+        document.getElementById('referralLabel').textContent = 'Could not load referrals.';
       }
     })();
   </script>
