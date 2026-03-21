@@ -358,12 +358,28 @@
       .pricing-card { padding: 20px; }
       footer { padding: 20px 16px; }
     }
+
+    .nav-referral {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: rgba(244, 243, 240, 0.05);
+  padding: 7px 16px;
+  border-radius: 100px;
+}
   </style>
 </head>
 <body>
 
   <nav id="nav">
     <a href="#" class="nav-logo">Agrade</a>
+    <p class="nav-referral">Refer two friends and get a free weekly trial</p>
+
     <div class="nav-actions">
       <a href="login.html" class="btn-ghost">Log in</a>
       <a href="#pricing" class="btn-ghost">Pricing</a>
@@ -414,6 +430,7 @@
   </section>
 
   <div class="divider"></div>
+  
 
   <section class="pricing" id="pricing">
     <p class="section-label">Pricing</p>
