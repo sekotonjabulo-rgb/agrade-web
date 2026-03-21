@@ -40,39 +40,6 @@
       opacity: 0.4;
     }
 
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 24px 48px;
-      transition: background 0.3s;
-    }
-
-    nav.scrolled {
-      background: rgba(8, 8, 10, 0.9);
-      backdrop-filter: blur(20px);
-    }
-
-    .nav-logo {
-      font-family: 'Instrument Serif', serif;
-      font-size: 1.4rem;
-      color: var(--white);
-      text-decoration: none;
-      letter-spacing: -0.01em;
-    }
-
-    .nav-link {
-      font-size: 0.82rem;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .nav-link:hover { color: var(--white); }
-
     .page {
       position: relative;
       z-index: 1;
@@ -80,7 +47,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 120px 24px 100px;
+      padding: 80px 24px 100px;
     }
 
     .auth-wrap {
@@ -104,6 +71,27 @@
       color: var(--muted);
       font-weight: 300;
       margin-bottom: 36px;
+    }
+
+    .ref-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(110, 231, 183, 0.08);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 0.68rem;
+      font-family: 'DM Mono', monospace;
+      color: #6ee7b7;
+      margin-bottom: 24px;
+    }
+
+    .ref-badge-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #6ee7b7;
+      box-shadow: 0 0 6px rgba(110,231,183,0.5);
     }
 
     .form-group {
@@ -163,15 +151,6 @@
       min-height: 1em;
     }
 
-    .auth-terms {
-      margin-top: 14px;
-      text-align: center;
-      font-size: 0.7rem;
-      color: rgba(244,243,240,0.2);
-      font-family: 'DM Mono', monospace;
-      line-height: 1.6;
-    }
-
     .auth-switch {
       margin-top: 24px;
       text-align: center;
@@ -188,67 +167,28 @@
 
     .auth-switch a:hover { opacity: 0.7; }
 
-    footer {
-      position: relative;
-      z-index: 1;
-      padding: 24px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .footer-logo {
-      font-family: 'Instrument Serif', serif;
-      font-size: 1.1rem;
-      color: var(--white);
-      text-decoration: none;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 28px;
-    }
-
-    .footer-link {
-      font-size: 0.65rem;
-      color: rgba(244,243,240,0.2);
-      text-decoration: none;
-      font-family: 'DM Mono', monospace;
-      letter-spacing: 0.06em;
-      transition: color 0.2s;
-    }
-
-    .footer-link:hover { color: var(--muted); }
-
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 768px) {
-      nav { padding: 20px 24px; }
-      .page { padding: 100px 20px 80px; }
-      .auth-title { font-size: 1.9rem; }
-      footer { padding: 20px 24px; }
-      .footer-links { gap: 16px; }
-    }
-
     @media (max-width: 480px) {
-      nav { padding: 16px 20px; }
-      .nav-link { font-size: 0.75rem; }
-      .page { padding: 90px 16px 60px; }
+      .page { padding: 60px 16px 60px; }
       .auth-title { font-size: 1.7rem; }
       .auth-wrap { max-width: 100%; }
-      footer { padding: 16px 20px; }
     }
   </style>
 </head>
 <body>
-
   <main class="page">
     <div class="auth-wrap">
       <p class="auth-title">Create account</p>
-      <p class="auth-subtitle">Start your agrade subscription today</p>
+      <p class="auth-subtitle">Start your agrade journey today</p>
+
+      <div id="refBadge" class="ref-badge" style="display:none">
+        <div class="ref-badge-dot"></div>
+        Referred by a friend
+      </div>
 
       <div class="form-group">
         <label class="form-label">Email</label>
@@ -275,9 +215,12 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsYWJ2ZGJjdmlsbmJ1a3JvcXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2OTQzNzQsImV4cCI6MjA4OTI3MDM3NH0.WLdB5hNXMHJ63JGwgXgY8TEEGz7k5AVbsV7aVDy6xQU'
     );
 
-    window.addEventListener('scroll', () => {
-      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
-    });
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+
+    if (ref) {
+      document.getElementById('refBadge').style.display = 'inline-flex';
+    }
 
     document.getElementById('submitBtn').addEventListener('click', async () => {
       const email = document.getElementById('emailInput').value.trim();
@@ -313,6 +256,21 @@
         submitBtn.disabled = false;
         submitBtn.textContent = 'Create account';
         return;
+      }
+
+      if (ref && data.session) {
+        try {
+          await fetch('https://agrade-cbwf.onrender.com/referral', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${data.session.access_token}`,
+            },
+            body: JSON.stringify({ ref }),
+          });
+        } catch (e) {
+          console.error('Referral error:', e);
+        }
       }
 
       window.location.href = 'dashboard.html';
