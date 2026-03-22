@@ -530,18 +530,8 @@
     });
 
 function triggerDownload() {
-  window.location.href = 'download.html';
+  window.location.href = 'https://agrade-cbwf.onrender.com/download';
 }
-
-    document.getElementById('navDownloadBtn').addEventListener('click', (e) => {
-      e.preventDefault();
-      triggerDownload();
-    });
-
-    document.getElementById('heroDownloadBtn').addEventListener('click', (e) => {
-      e.preventDefault();
-      triggerDownload();
-    });
 
     async function handlePlanClick(plan) {
       const { data } = await supabaseClient.auth.getSession();
