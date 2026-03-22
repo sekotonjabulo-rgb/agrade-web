@@ -529,15 +529,9 @@
       document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
     });
 
-    function triggerDownload() {
-      const link = document.createElement('a');
-      link.href = 'https://github.com/Lethabo3/agrade/releases/latest/download/agrade_0.1.0_x64-setup.exe';
-      link.download = 'agrade_0.1.0_x64-setup.exe';
-      link.click();
-      setTimeout(() => {
-        window.location.href = 'install.html';
-      }, 1500);
-    }
+function triggerDownload() {
+  window.location.href = 'download.html';
+}
 
     document.getElementById('navDownloadBtn').addEventListener('click', (e) => {
       e.preventDefault();
