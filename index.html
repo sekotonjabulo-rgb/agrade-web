@@ -545,6 +545,16 @@ function triggerDownload() {
       }
     }
 
+    document.getElementById('navDownloadBtn').addEventListener('click', (e) => {
+  e.preventDefault();
+  triggerDownload();
+});
+
+document.getElementById('heroDownloadBtn').addEventListener('click', (e) => {
+  e.preventDefault();
+  triggerDownload();
+});
+
     document.getElementById('btnWeekly').addEventListener('click', (e) => {
       e.preventDefault();
       handlePlanClick('weekly');
